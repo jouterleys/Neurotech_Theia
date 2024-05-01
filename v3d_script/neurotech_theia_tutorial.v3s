@@ -1,7 +1,9 @@
+! Save the workspace
 File_Save
 ! /SET_PROMPT=Save CMO file
 ;
 
+! Get the file path of current CMZ
 Set_Pipeline_Parameter_To_Folder_Path
 /PARAMETER_NAME=CMZ_LOCATION
 /PARAMETER_VALUE=
@@ -11,12 +13,16 @@ Set_Pipeline_Parameter_To_Folder_Path
 ! /PARAMETER_VALUE_APPEND=
 ;
 
+! Select all files in the workspace
+! All the following commands will be run on the files selected
 Select_Active_File
-! /FILE_NAME=
+/FILE_NAME=ALL_FILES
 ! /QUERY=
 ! /SUBJECT_TAGS=NO_SUBJECT
 ;
 
+! The following are a series of commands to calculated biomechanical signals and outcomes
+! The following signals are needed to find heel strike and toe off events (see https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2384115/ for details)
 Compute_Model_Based_Data
 /RESULT_NAME=RHEEL_WRT_PELVIS
 /FUNCTION=SEG_PROXIMAL_JOINT
@@ -101,7 +107,7 @@ Compute_Model_Based_Data
 ! /TREADMILL_SPEED=0.0
 ;
 
-! Zeni Coordinate Method
+! Zeni Coordinate Method for heel strike and toe off events (see https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2384115/ for details)
 Event_Maximum
 /RESULT_EVENT_NAME=RHS
 /SIGNAL_TYPES=LINK_MODEL_BASED
@@ -175,6 +181,9 @@ Event_Minimum
 ! /THRESHOLD=
 ;
 
+! This command computes temporal distance outcomes using the heel strike and toe off events
+! See here: https://c-motion.com/v3dwiki/index.php?title=Temporal_Distance_Calculations_for_Gait and here: !https://c-motion.com/v3dwiki/index.php/Metric_Compute_Temporal_Distance for details
+! Note if you walked a different speed you will need to update the TREADMILL_SPEED variable. The variable is needed in meters per second.
 Metric_Compute_Temporal_Distance
 ! /GLOBAL_RESULT_METRIC_FOLDER=TEMPORAL_DISTANCE
 /CALCULATE_PER_FILE=TRUE
@@ -214,6 +223,9 @@ Metric_Compute_Temporal_Distance
 /TREADMILL_DIRECTION=UNIT_VECTOR(0,1,0)
 ;
 
+! The following commands calculate model based data including joint angles, joint positions, and segment angles.
+! See https://www.c-motion.com/v3dwiki/index.php?title=Model_Based_Items for details.
+! See https://www.c-motion.com/v3dwiki/index.php?title=Tutorial:_Model_Based_Computations for a tutorial. 
 Compute_Model_Based_Data
 /RESULT_NAME=LEFT_ANKLE_POSITION
 /SUBJECT_TAG=ALL_SUBJECTS
@@ -390,6 +402,7 @@ Compute_Model_Based_Data
 ! /TREADMILL_SPEED=0.0
 ;
 
+! Full body model center of mass position
 Compute_Model_Based_Data
 /RESULT_NAME=RIGHT_MODELCOM_POSITION
 /SUBJECT_TAG=ALL_SUBJECTS
@@ -457,7 +470,8 @@ Compute_Model_Based_Data
 ! /TREADMILL_SPEED=0.0
 ;
 
-! Baker Convention Z-Y-X
+! Baker Convention with Cardan Sequence of Z-Y-X
+! See https://pubmed.ncbi.nlm.nih.gov/11166548/ for details
 Compute_Model_Based_Data
 /RESULT_NAME=RIGHT_PELVIS_ANGLE
 /SUBJECT_TAG=ALL_SUBJECTS
@@ -816,16 +830,19 @@ Compute_Model_Based_Data
 ! /TREADMILL_SPEED=0.0
 ;
 
+! Switches the window to the Report Tab
 Switch_to_Report_Mode
 ! /SHOW_ANIMATION=FALSE
 ! /PAGE_NUMBER=
 ;
 
+! Open the Report Template.
 Open_Report_Template
 ! /REPORT_TEMPLATE=
-/SET_PROMPT=Open report template
+/SET_PROMPT=Open the neurotech_theia_tutorial_report.rgt
 ;
 
+! Export the selected temporal distance data in txt file format
 Export_Data_To_Ascii_File
 /FILE_NAME=::CMZ_LOCATION&results\gait_metrics.txt
 /SIGNAL_TYPES=METRIC
@@ -853,6 +870,7 @@ Export_Data_To_Ascii_File
 ! /USE_SCIENTIFIC_NOTATION=FALSE
 ;
 
+! Export left and right knee joint angles to a mat file.
 Export_Data_To_Matfile
 /SIGNAL_TYPES=LINK_MODEL_BASED+LINK_MODEL_BASED
 /SIGNAL_FOLDER=ORIGINAL+ORIGINAL
@@ -867,6 +885,7 @@ Export_Data_To_Matfile
 /USE_NAN_FOR_DATANOTFOUND=TRUE
 ;
 
+! Export right knee joint angles to a txt files between Right Heel Strikes (RHS) and normalize to 101 points.
 Export_Data_To_Ascii_File
 /FILE_NAME=::CMZ_LOCATION&results\right_knee_angle.txt
 /SIGNAL_TYPES=LINK_MODEL_BASED+LINK_MODEL_BASED
@@ -894,6 +913,7 @@ Export_Data_To_Ascii_File
 ! /USE_SCIENTIFIC_NOTATION=FALSE
 ;
 
+! Export left knee joint angles to a txt files between Left Heel Strikes (RHS) and normalize to 101 points.
 Export_Data_To_Ascii_File
 /FILE_NAME=::CMZ_LOCATION&results\left_knee_angle.txt
 /SIGNAL_TYPES=LINK_MODEL_BASED+LINK_MODEL_BASED
