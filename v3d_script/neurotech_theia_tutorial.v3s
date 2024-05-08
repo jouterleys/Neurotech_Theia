@@ -1,6 +1,6 @@
 ! Save the workspace
 File_Save
-! /SET_PROMPT=Save CMO file
+/SET_PROMPT=Save this workspace (CMZ) before proceeding...
 ;
 
 ! Get the file path of current CMZ
