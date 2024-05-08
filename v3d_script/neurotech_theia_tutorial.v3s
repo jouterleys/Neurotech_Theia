@@ -21,7 +21,7 @@ Select_Active_File
 ! /SUBJECT_TAGS=NO_SUBJECT
 ;
 
-! The following are a series of commands to calculated biomechanical signals and outcomes
+! The following are a series of commands to calculate biomechanical signals and outcomes
 ! The following signals are needed to find heel strike and toe off events (see https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2384115/ for details)
 Compute_Model_Based_Data
 /RESULT_NAME=RHEEL_WRT_PELVIS
@@ -183,7 +183,9 @@ Event_Minimum
 
 ! This command computes temporal distance outcomes using the heel strike and toe off events
 ! See here: https://c-motion.com/v3dwiki/index.php?title=Temporal_Distance_Calculations_for_Gait and here: !https://c-motion.com/v3dwiki/index.php/Metric_Compute_Temporal_Distance for details
+
 ! Note if you walked a different speed you will need to update the TREADMILL_SPEED variable. The variable is needed in meters per second.
+
 Metric_Compute_Temporal_Distance
 ! /GLOBAL_RESULT_METRIC_FOLDER=TEMPORAL_DISTANCE
 /CALCULATE_PER_FILE=TRUE
@@ -670,7 +672,7 @@ Compute_Model_Based_Data
 ! /RESOLUTION_COORDINATE_SYSTEM=LAB
 ! /USE_CARDAN_SEQUENCE=FALSE
 ! /NORMALIZATION=FALSE
-/NORMALIZATION_METHOD=TRUE
+! /NORMALIZATION_METHOD=TRUE
 ! /NORMALIZATION_METRIC=
 /NEGATEX=TRUE
 ! /NEGATEY=FALSE
@@ -691,7 +693,7 @@ Compute_Model_Based_Data
 ! /RESOLUTION_COORDINATE_SYSTEM=LAB
 ! /USE_CARDAN_SEQUENCE=FALSE
 ! /NORMALIZATION=FALSE
-/NORMALIZATION_METHOD=TRUE
+! /NORMALIZATION_METHOD=TRUE
 ! /NORMALIZATION_METRIC=
 ! /NEGATEX=FALSE
 ! /NEGATEY=FALSE
